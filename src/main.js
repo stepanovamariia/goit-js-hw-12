@@ -78,8 +78,10 @@ async function handleSubmit(event) {
 }
 
 async function loadMoreImages() {
+  refs.loadMoreBtn.style.display = 'none'; // Hide the load more button
+  refs.loader.style.display = 'block'; // Show the loader
+
   page += 1;
-  refs.loader.style.display = 'block'; // Показать loader
 
   let data;
 
@@ -97,10 +99,12 @@ async function loadMoreImages() {
     }
   } catch (err) {
     console.log(err);
+    refs.loader.style.display = 'none';
+    refs.loadMoreBtn.style.display = 'block'; // Show the load more button in case of error
     return;
   }
 
-  refs.loader.style.display = 'none'; // Скрыть loader
+  refs.loader.style.display = 'none'; // Hide the loader
 
   const markup = createMarkup(data.hits);
   refs.gallery.insertAdjacentHTML('beforeend', markup);
@@ -113,5 +117,7 @@ async function loadMoreImages() {
       message: "We're sorry, but you've reached the end of search results.",
       messageColor: 'red',
     });
+  } else {
+    refs.loadMoreBtn.style.display = 'block'; // Show the load more button if there are more images
   }
 }
