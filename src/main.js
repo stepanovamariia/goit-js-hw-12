@@ -31,7 +31,7 @@ async function handleSubmit(event) {
 
     iziToast.show({
       message:
-        'Извините, нет изображений, соответствующих вашему запросу. Пожалуйста, попробуйте еще раз!',
+        'Sorry, there are no images matching your search query. Please try again!',
       messageColor: 'red',
     });
     refs.loader.style.display = 'none';
@@ -54,7 +54,7 @@ async function handleSubmit(event) {
       refs.loader.style.display = 'none';
       iziToast.show({
         message:
-          'Извините, нет изображений, соответствующих вашему запросу. Пожалуйста, попробуйте еще раз!',
+          'Sorry, there are no images matching your search query. Please try again!',
         messageColor: 'red',
       });
       return;
@@ -90,7 +90,7 @@ async function loadMoreImages() {
       refs.loader.style.display = 'none';
       refs.loadMoreBtn.style.display = 'none';
       iziToast.show({
-        message: 'Мы извиняемся, но вы достигли конца результатов поиска.',
+        message: "We're sorry, but you've reached the end of search results.",
         messageColor: 'red',
       });
       return;
@@ -110,7 +110,7 @@ async function loadMoreImages() {
   if ((page - 1) * 15 + data.hits.length >= totalHits) {
     refs.loadMoreBtn.style.display = 'none';
     iziToast.show({
-      message: 'Мы извиняемся, но вы достигли конца результатов поиска.',
+      message: "We're sorry, but you've reached the end of search results.",
       messageColor: 'red',
     });
   }
