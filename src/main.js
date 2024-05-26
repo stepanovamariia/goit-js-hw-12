@@ -14,7 +14,10 @@ const refs = {
   loader: document.querySelector('.loader'),
 };
 
-let lightbox;
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 let query = '';
 let page = 1;
 let totalHits = 0;
@@ -26,7 +29,19 @@ async function handleSubmit(event) {
   event.preventDefault();
   query = refs.input.value.toLowerCase();
 
-  if (!query || query.includes(' ')) {
+  if (!query) {
+    refs.gallery.innerHTML = '';
+
+    iziToast.show({
+      message: 'Enter your request!',
+      messageColor: 'red',
+    });
+    refs.loader.style.display = 'none';
+    refs.loadMoreBtn.style.display = 'none';
+    return;
+  }
+
+  if (query.includes(' ')) {
     refs.gallery.innerHTML = '';
 
     iziToast.show({
@@ -69,17 +84,16 @@ async function handleSubmit(event) {
   const markup = createMarkup(data.hits);
   refs.gallery.innerHTML = markup;
 
-  lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
+  lightbox.refresh();
 
   refs.loadMoreBtn.style.display = 'block';
+
+  smoothScroll();
 }
 
 async function loadMoreImages() {
-  refs.loadMoreBtn.style.display = 'none'; // Hide the load more button
-  refs.loader.style.display = 'block'; // Show the loader
+  refs.loadMoreBtn.style.display = 'none';
+  refs.loader.style.display = 'block';
 
   page += 1;
 
@@ -100,11 +114,11 @@ async function loadMoreImages() {
   } catch (err) {
     console.log(err);
     refs.loader.style.display = 'none';
-    refs.loadMoreBtn.style.display = 'block'; // Show the load more button in case of error
+    refs.loadMoreBtn.style.display = 'block';
     return;
   }
 
-  refs.loader.style.display = 'none'; // Hide the loader
+  refs.loader.style.display = 'none';
 
   const markup = createMarkup(data.hits);
   refs.gallery.insertAdjacentHTML('beforeend', markup);
@@ -118,6 +132,18 @@ async function loadMoreImages() {
       messageColor: 'red',
     });
   } else {
-    refs.loadMoreBtn.style.display = 'block'; // Show the load more button if there are more images
+    refs.loadMoreBtn.style.display = 'block';
   }
+
+  smoothScroll();
+}
+
+function smoothScroll() {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 }
